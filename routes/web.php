@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CetakController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
@@ -40,6 +41,7 @@ Route::middleware(['auth'])->resource('/client', ClientController::class);
 Route::middleware(['auth'])->resource('/bahan', ToolController::class);
 Route::middleware(['auth'])->resource('/production', ProductionController::class);
 Route::middleware(['auth'])->resource('/payment', PaymentController::class);
+Route::middleware(['auth'])->resource('/cetak', CetakController::class);
 
 Route::get('bayar/{id}', [PaymentController::class, 'bayar'])->middleware(['auth'])->name('payment.bayar');
 Route::post('bayarStore/{id}', [PaymentController::class, 'bayarStore'])->middleware(['auth'])->name('payment.store');

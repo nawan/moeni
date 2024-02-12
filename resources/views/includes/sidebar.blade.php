@@ -119,6 +119,19 @@
                         </a>
                     </nav>
                 </div>
+                {{-- menu cetak --}}
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCetak" aria-expanded="false" aria-controls="collapseCetak">
+                    <div class="sb-nav-link-icon"><i class="fa fa-print"></i></div>
+                    Cetak
+                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                </a>
+                <div class="collapse" id="collapseCetak" aria-labelledby="headingCetak" data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                        <a class="nav-link collapsed" href="{{ route('cetak.index') }}">
+                            Bukti Bayar 
+                        </a>
+                    </nav>
+                </div>
                 <div class="sb-sidenav-menu-heading">Profil</div>
                 {{-- menu profil --}}
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProfil" aria-expanded="false" aria-controls="collapseProfil">
