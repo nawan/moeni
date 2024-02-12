@@ -43,6 +43,9 @@ Route::middleware(['auth'])->resource('/production', ProductionController::class
 Route::middleware(['auth'])->resource('/payment', PaymentController::class);
 Route::middleware(['auth'])->resource('/cetak', CetakController::class);
 
+Route::get('preview/{id}', [CetakController::class, 'preview'])->middleware(['auth'])->name('cetak.preview');
+Route::get('print/{id}', [CetakController::class, 'print'])->middleware(['auth'])->name('cetak.print');
+
 Route::get('bayar/{id}', [PaymentController::class, 'bayar'])->middleware(['auth'])->name('payment.bayar');
 Route::post('bayarStore/{id}', [PaymentController::class, 'bayarStore'])->middleware(['auth'])->name('payment.store');
 Route::get('/history', [PaymentController::class, 'history'])->middleware(['auth'])->name('payment.history');

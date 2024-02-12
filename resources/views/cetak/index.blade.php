@@ -114,13 +114,6 @@
                     }
                 },
                 {
-                    data: 'payment_amount',
-                    name: 'payment_amount',
-                    render: function(data, type, full, meta) {
-                        return "<span class=\"text-capitalize\">rp "+ data +"</span>";
-                    }
-                },
-                {
                     data: 'payment_proof',
                     name: 'payment_proof',
                     render: function(data, type, full, meta) {
@@ -129,15 +122,15 @@
                     orderable: true,
                     searchable: true
                 },
-                // {
-                //     data: 'action',
-                //     name: 'action',
-                //     orderable: true,
-                //     searchable: true,
-                //     render: function(data){
-                //     return "<div class=\"d-inline-flex\">"+ data +"</div>";
-                // }
-                // },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: true,
+                    searchable: true,
+                    render: function(data){
+                    return "<div class=\"d-inline-flex\">"+ data +"</div>";
+                }
+                },
             ],
             language: {
                 "sProcessing":   "Memproses...",
