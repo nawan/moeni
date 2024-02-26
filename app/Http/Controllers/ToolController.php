@@ -72,8 +72,8 @@ class ToolController extends Controller
         $data = $request->validate([
             'name' => 'required',
             'status_bahan' => 'required',
-            'jml_stok' => 'required|numeric|min:0|not_in:0',
-            'price' => 'required|numeric|min:0|not_in:0',
+            'jml_stok' => 'required',
+            'price' => 'required',
             'foto_bahan' => 'required|image',
             'note' => 'required',
             'deskripsi' => 'required',

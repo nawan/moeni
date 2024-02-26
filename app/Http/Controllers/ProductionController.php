@@ -80,7 +80,7 @@ class ProductionController extends Controller
             'note' => 'required'
         ]);
 
-        $data['price'] = 0;
+        $data['total_price'] = 0;
 
         $id = Production::create($data)->id;
         $encryptID = Crypt::encrypt($id);
