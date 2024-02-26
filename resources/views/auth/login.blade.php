@@ -60,7 +60,7 @@
                 <div class="col-md-5 col-lg-4 col-sm-6 mx-auto pt-5">
                     <div class="card align-middle bg-dark transparent rounded-full">
                         <div class="card-header fw-bold text-center text-capitalize text-light mb-2">
-                            <h5>login dashboard admin PO</h5>
+                            <h5>login admin PO</h5>
                         </div>
                         <div class="card-body bg-dark mb-3" style="opacity:initial">
                             <div class="text-center mb-5">
