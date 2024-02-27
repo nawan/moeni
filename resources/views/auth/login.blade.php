@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Moeni Box</title>
+    <title>Admin Moeni Box</title>
     <link rel="icon" type="image" href="{{ URL::asset('/assets/img/logo.png') }}">
 </head>
 <style>
@@ -53,14 +53,14 @@
 <link rel="stylesheet" href="css/bg.css">
 {{-- bootstrap@5.3.0-alpha3 css --}}
 <link rel="stylesheet" href="{{ URL::asset('/assets/bootstrap-5/css/bootstrap.min.css') }}" />
-<body class="bg-primary">
+<body class="bg-login">
     <div class="pt-5">  
         <div class="container-fluid">  
             <div class="row pt-5">  
                 <div class="col-md-5 col-lg-4 col-sm-6 mx-auto pt-5">
                     <div class="card align-middle bg-dark transparent rounded-full">
                         <div class="card-header fw-bold text-center text-capitalize text-light mb-2">
-                            <h5>login admin PO</h5>
+                            <h5>login dashboard admin PO</h5>
                         </div>
                         <div class="card-body bg-dark mb-3" style="opacity:initial">
                             <div class="text-center mb-5">
