@@ -132,7 +132,7 @@
                     data: 'foto_bahan',
                     name: 'foto_bahan',
                     render: function(data, type, full, meta) {
-                        return "<img src=\"/storage/" + data + "\" width=\"120\" height=\"60\"/>";
+                        return "<img src=\"../storage/" + data + "\" width=\"120\" height=\"60\"/>";
                     },
                     orderable: true,
                     searchable: true

@@ -106,13 +106,13 @@
                 {{-- menu data payment --}}
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePayment" aria-expanded="false" aria-controls="collapsePayment">
                     <div class="sb-nav-link-icon"><i class="fa fa-dollar-sign"></i></div>
-                    Billing
+                    Pembayaran
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
                 <div class="collapse" id="collapsePayment" aria-labelledby="headingPayment" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                         <a class="nav-link collapsed" href="{{ route('payment.index') }}">
-                            Pembayaran 
+                            Bayar 
                         </a>
                         <a class="nav-link collapsed" href="{{ route('payment.history') }}">
                             Riwayat
