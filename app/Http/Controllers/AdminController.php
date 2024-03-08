@@ -19,13 +19,17 @@ class AdminController extends Controller
      */
     public function index(Request $request, User $user)
     {
-        $search = $request->search;
-        $admins = User::where('is_admin', '!=', 0)
-            ->where('is_admin', '!=', 4)
-            ->where('name', 'like', '%' . $search . '%')
-            ->latest()
-            ->paginate(5);
-        return view('admin.index', compact('admins'));
+        if (auth()->user()->is_admin == '1') {
+            $search = $request->search;
+            $admins = User::where('is_admin', '!=', 0)
+                ->where('is_admin', '!=', 4)
+                ->where('name', 'like', '%' . $search . '%')
+                ->latest()
+                ->paginate(5);
+            return view('admin.index', compact('admins'));
+        } else {
+            return redirect()->route('error.404');
+        }
     }
 
     /**
@@ -33,7 +37,11 @@ class AdminController extends Controller
      */
     public function create()
     {
-        return view('admin.create');
+        if (auth()->user()->is_admin == '1') {
+            return view('admin.create');
+        } else {
+            return redirect()->route('error.404');
+        }
     }
 
     /**

@@ -19,39 +19,43 @@ class ClientController extends Controller
      */
     public function index(Request $request, User $clients)
     {
-        if ($request->ajax()) {
-            $data = User::where('is_admin', '=', 0)
-                ->latest()->get();
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->editColumn('name', function (User $client) {
-                    return $client->name;
-                })
-                ->editColumn('image', function (User $client) {
-                    return $client->image;
-                })
-                ->editColumn('no_kontak', function (User $client) {
-                    return $client->no_kontak;
-                })
-                ->editColumn('created_at', function (User $client) {
-                    return Carbon::parse($client->created_at)->isoFormat('D MMMM Y');
-                })
-                ->addColumn('action', function (User $client) {
-                    $encryptID = Crypt::encrypt($client->id);
-                    $btn = '<form class="d-inline m-1" action=' . route("client.destroy", $client->id) . ' method="POST">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="hidden" name="_token" value=' . csrf_token() . '>
-                        <button class="btn btn-danger btn-sm btn-flat" type="submit" title="Hapus" data-toggle="tooltip" data-placement="top" onclick="deleteConfirm(event)"><i class="fas fa-trash"></i></button>
-                        </form>';
-                    $btn = $btn . '<a href=' . route("client.edit", $encryptID) . ' class="edit btn btn-warning btn-sm m-1" title="Edit Pembayaran" data-toggle="tooltip" data-placement="top"><i class="fas fa-edit"></i></a>';
-                    $btn = $btn . '<a href=' . route("client.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="Lihat Pembayaran" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
+        if (auth()->user()->is_admin != '4') {
+            if ($request->ajax()) {
+                $data = User::where('is_admin', '=', 0)
+                    ->latest()->get();
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->editColumn('name', function (User $client) {
+                        return $client->name;
+                    })
+                    ->editColumn('image', function (User $client) {
+                        return $client->image;
+                    })
+                    ->editColumn('no_kontak', function (User $client) {
+                        return $client->no_kontak;
+                    })
+                    ->editColumn('created_at', function (User $client) {
+                        return Carbon::parse($client->created_at)->isoFormat('D MMMM Y');
+                    })
+                    ->addColumn('action', function (User $client) {
+                        $encryptID = Crypt::encrypt($client->id);
+                        $btn = '<form class="d-inline m-1" action=' . route("client.destroy", $client->id) . ' method="POST">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value=' . csrf_token() . '>
+                            <button class="btn btn-danger btn-sm btn-flat" type="submit" title="Hapus" data-toggle="tooltip" data-placement="top" onclick="deleteConfirm(event)"><i class="fas fa-trash"></i></button>
+                            </form>';
+                        $btn = $btn . '<a href=' . route("client.edit", $encryptID) . ' class="edit btn btn-warning btn-sm m-1" title="Edit Pembayaran" data-toggle="tooltip" data-placement="top"><i class="fas fa-edit"></i></a>';
+                        $btn = $btn . '<a href=' . route("client.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="Lihat Pembayaran" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
 
-                    return $btn;
-                })
-                ->rawColumns(['action', 'modal'])
-                ->make(true);
+                        return $btn;
+                    })
+                    ->rawColumns(['action', 'modal'])
+                    ->make(true);
+            }
+            return view('client.index', compact('clients'));
+        } else {
+            return redirect()->route('error.404');
         }
-        return view('client.index', compact('clients'));
     }
 
     /**
@@ -59,7 +63,11 @@ class ClientController extends Controller
      */
     public function create()
     {
-        return view('client.create');
+        if (auth()->user()->is_admin != '4') {
+            return view('client.create');
+        } else {
+            return redirect()->route('error.404');
+        }
     }
 
     /**

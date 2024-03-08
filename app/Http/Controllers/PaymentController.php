@@ -21,32 +21,37 @@ class PaymentController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $data = Production::where('status_proses', '=', 'DONE')
-                ->latest()->get();
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->editColumn('user_id', function (Production $production) {
-                    return $production->user->name;
-                })
-                ->editColumn('pre_order', function (Production $production) {
-                    return $production->pre_order;
-                })
-                ->editColumn('jenis_box', function (Production $production) {
-                    return $production->jenis_box;
-                })
-                ->editColumn('total_price', function (Production $production) {
-                    return number_format($production->total_price, 0, ',', '.');
-                })
-                ->addColumn('action', function (Production $production) {
-                    $encryptID = Crypt::encrypt($production->id);
-                    $btn =  '<a href=' . route("payment.bayar", $encryptID) . ' class="btn btn-primary btn-sm m-1" title="Bayar" data-toggle="tooltip" data-placement="top"><i class="fa fa-plus-square"></i> Bayar</a>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+        if (auth()->user()->is_admin == '1' || auth()->user()->is_admin == '2') {
+            if ($request->ajax()) {
+                $data = Production::where('status_proses', '!=', 'DP')
+                    ->where('status_proses', '!=', 'PAID')
+                    ->latest()->get();
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->editColumn('user_id', function (Production $production) {
+                        return $production->user->name;
+                    })
+                    ->editColumn('pre_order', function (Production $production) {
+                        return $production->pre_order;
+                    })
+                    ->editColumn('jenis_box', function (Production $production) {
+                        return $production->jenis_box;
+                    })
+                    ->editColumn('total_price', function (Production $production) {
+                        return number_format($production->total_price, 0, ',', '.');
+                    })
+                    ->addColumn('action', function (Production $production) {
+                        $encryptID = Crypt::encrypt($production->id);
+                        $btn =  '<a href=' . route("payment.bayar", $encryptID) . ' class="btn btn-primary btn-sm m-1" title="Bayar" data-toggle="tooltip" data-placement="top"><i class="fa fa-plus-square"></i> Bayar</a>';
+                        return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+            return view('payment.index');
+        } else {
+            return redirect()->route('error.404');
         }
-        return view('payment.index');
     }
 
     /**
@@ -54,7 +59,11 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        return view('payment.create');
+        if (auth()->user()->is_admin == '1' || auth()->user()->is_admin == '2') {
+            return view('payment.create');
+        } else {
+            return redirect()->route('error.404');
+        }
     }
 
     /**
@@ -152,7 +161,7 @@ class PaymentController extends Controller
         Payment::create($data);
 
         $production = Production::find($request->production_id);
-        $production->status_proses = 'PAID';
+        $production->status_payment = 'PAID';
         $production->save();
 
         toastr()->success('Proses Pembayaran Berhasil', 'Sukses', ['positionClass' => 'toast-top-full-width', 'closeButton' => true]);
@@ -162,33 +171,37 @@ class PaymentController extends Controller
 
     public function history(Request $request)
     {
-        if ($request->ajax()) {
-            $data = Payment::latest()->get();
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->editColumn('user_id', function (Payment $payment) {
-                    return $payment->user->name;
-                })
-                ->editColumn('production_id', function (Payment $payment) {
-                    return $payment->production->pre_order;
-                })
-                ->editColumn('jenis_box', function (Payment $payment) {
-                    return $payment->production->jenis_box;
-                })
-                ->editColumn('payment_amount', function (Payment $payment) {
-                    return number_format($payment->payment_amount, 0, ',', '.');
-                })
-                ->editColumn('payment_date', function (Payment $payment) {
-                    return Carbon::parse($payment->payment_date)->isoFormat('D MMMM Y');
-                })
-                ->addColumn('action', function (Payment $payment) {
-                    $encryptID = Crypt::encrypt($payment->id);
-                    $btn =  '<a href=' . route("payment.show", $encryptID) . ' class="btn btn-primary btn-sm m-1" title="Bayar" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye"></i></a>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+        if (auth()->user()->is_admin == '1' || auth()->user()->is_admin == '2') {
+            if ($request->ajax()) {
+                $data = Payment::latest()->get();
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->editColumn('user_id', function (Payment $payment) {
+                        return $payment->user->name;
+                    })
+                    ->editColumn('production_id', function (Payment $payment) {
+                        return $payment->production->pre_order;
+                    })
+                    ->editColumn('jenis_box', function (Payment $payment) {
+                        return $payment->production->jenis_box;
+                    })
+                    ->editColumn('payment_amount', function (Payment $payment) {
+                        return number_format($payment->payment_amount, 0, ',', '.');
+                    })
+                    ->editColumn('payment_date', function (Payment $payment) {
+                        return Carbon::parse($payment->payment_date)->isoFormat('D MMMM Y');
+                    })
+                    ->addColumn('action', function (Payment $payment) {
+                        $encryptID = Crypt::encrypt($payment->id);
+                        $btn =  '<a href=' . route("payment.show", $encryptID) . ' class="btn btn-primary btn-sm m-1" title="Bayar" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye"></i></a>';
+                        return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+            return view('payment.history');
+        } else {
+            return redirect()->route('error.404');
         }
-        return view('payment.history');
     }
 }

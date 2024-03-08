@@ -102,10 +102,10 @@
                     searchable: true
                 },
                 {
-                    data: 'no_kontak',
-                    name: 'no_kontak',
+                    data: 'status',
+                    name: 'status',
                     render: function(data, type, full, meta) {
-                        return "<span class=\"text-capitalize\">"+ data +"</span>";
+                        return "<span class=\"text-capitalize badge bg-primary\">"+ data +"</span>";
                     }
                 },
                 {
@@ -162,7 +162,7 @@
         <div class="col-md-7">
             <div class="card">
                 <div class="card-header text-center fw-bold text-uppercase mb-10 bg-success text-white">
-                    Tambah Tukang Proses {{ $production->status_proses }}
+                    PO Box {{ $production->jenis_box }}
                 </div>
                 <div class="card-body overflow-auto" style="height: 700px">
                     <table class="table table-bordered table-hover text-center align-middle stripe" id="data-tukang" style="width:100%;">
@@ -171,7 +171,7 @@
                                 <th scope="col">No</th>
                                 <th scope="col">Nama</th>
                                 <th scope="col">Foto</th>
-                                <th scope="col">No Kontak</th>
+                                <th scope="col">Pekerjaan</th>
                                 <th scope="col">Aksi</th>
                             </tr>
                         </thead>
