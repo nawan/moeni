@@ -112,6 +112,8 @@
 <!-- jQuery -->
 <script src="/assets/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="{{ URL::asset('/assets/bootstrap-5/bootstrap.min.js') }}"></script>
+{{-- bootstrap password jscript --}}
+<script type="text/javascript" src="{{ URL::asset('assets/bootstrap-5/js/bootstrap-show-password.min.js') }}"></script>
 <script>
     $(document).ready(function() {
     $("#show_hide_password i").on('click', function(event) {

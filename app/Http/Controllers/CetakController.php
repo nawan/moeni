@@ -16,35 +16,38 @@ class CetakController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $data = Payment::latest()->get();
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->editColumn('user_id', function (Payment $payment) {
-                    return $payment->user->name;
-                })
-                ->editColumn('pre_order', function (Payment $payment) {
-                    return $payment->production->pre_order;
-                })
-                ->editColumn('jenis_box', function (Payment $payment) {
-                    return $payment->production->jenis_box;
-                })
-                ->editColumn('payment_amount', function (Payment $payment) {
-                    return number_format($payment->payment_amount, 0, ',', '.');
-                })
-                ->editColumn('payment_proof', function (Payment $payment) {
-                    return $payment->payment_proof;
-                })
-                ->addColumn('action', function (Payment $payment) {
-                    $encryptID = Crypt::encrypt($payment->id);
-                    $btn =  '<a href=' . route("cetak.preview", $encryptID) . ' class="btn btn-primary btn-sm m-1" title="Print" data-toggle="tooltip" data-placement="top"><i class="fa fa-print"></i> Print</a>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+        if (auth()->user()->is_admin != '4') {
+            if ($request->ajax()) {
+                $data = Payment::latest()->get();
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->editColumn('user_id', function (Payment $payment) {
+                        return $payment->user->name;
+                    })
+                    ->editColumn('pre_order', function (Payment $payment) {
+                        return $payment->production->pre_order;
+                    })
+                    ->editColumn('jenis_box', function (Payment $payment) {
+                        return $payment->production->jenis_box;
+                    })
+                    ->editColumn('payment_amount', function (Payment $payment) {
+                        return number_format($payment->payment_amount, 0, ',', '.');
+                    })
+                    ->editColumn('payment_proof', function (Payment $payment) {
+                        return $payment->payment_proof;
+                    })
+                    ->addColumn('action', function (Payment $payment) {
+                        $encryptID = Crypt::encrypt($payment->id);
+                        $btn =  '<a href=' . route("cetak.preview", $encryptID) . ' class="btn btn-primary btn-sm m-1" title="Print" data-toggle="tooltip" data-placement="top"><i class="fa fa-print"></i> Print</a>';
+                        return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+            return view('cetak.index');
+        } else {
+            return redirect()->route('error.404');
         }
-
-        return view('cetak.index');
     }
 
     public function preview(String $id)

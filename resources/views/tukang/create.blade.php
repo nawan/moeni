@@ -54,7 +54,7 @@
             <form action="{{ route('tukang.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf()
                 <div class="row">
-                    <div class="form-group col-md-6 mb-3">
+                    <div class="form-group col-md-4 mb-3">
                         <label for="name" class="form-label">Nama</label>
                         <input type="text" class="form-control count-chars text-uppercase @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" maxlength="20" data-max-chars="20">
                         <div class="fw-light text-muted justify-content-end d-flex"></div>
@@ -62,13 +62,27 @@
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
-                    <div class="form-group col-md-6 mb-3">
+                    <div class="form-group col-md-4 mb-3">
                         <label for="nik" class="form-label">NIK</label>
                         <input type="number" class="form-control count-chars @error('nik') is-invalid @enderror" id="nik" name="nik" value="{{ old('nik') }}" maxlength="16" data-max-chars="16">
                         <div class="fw-light text-muted justify-content-end d-flex"></div>
                         @error('nik')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
+                    </div>
+                    <div class="form-group col-md-4 mb-3">
+                        <label for="status" class="form-label">Pekerjaan</label>
+                        <select class="form-select @error('status') is-invalid @enderror" id="status" name="status">
+                            <option selected value="">--Silahkan Pilih--</option>
+                            <option value="DESIGNING">Designing</option>
+                            <option value="MACHINING">Machining</option>
+                            <option value="ASSEMBLING">Assembling</option>
+                            <option value="PAINTING">Painting</option>
+                            <option value="INSTALLATION">Installation</option>
+                            <option value="TUNING">Tuning</option>
+                            <option value="PACKING">Packing</option>
+                            <option value="DELIVERY">Delivery</option>
+                        </select>
                     </div>
                 </div>
                 <div class="row">
@@ -91,17 +105,12 @@
                         @enderror
                     </div>
                     <div class="form-group col-md-4 mb-3">
-                        <label for="status" class="form-label">Pekerjaan</label>
-                        <select class="form-select" id="status" name="status">
-                            <option selected value="DESIGNING">Designing</option>
-                            <option value="MACHINING">Machining</option>
-                            <option value="ASSEMBLING">Assembling</option>
-                            <option value="PAINTING">Painting</option>
-                            <option value="INSTALLATION">Installation</option>
-                            <option value="TUNING">Tuning</option>
-                            <option value="PACKING">Packing</option>
-                            <option value="DELIVERY">Delivery</option>
-                        </select>
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" data-toggle="password" class="form-control count-chars @error('password') is-invalid @enderror" id="password" name="password" value="{{ old('password') }}" maxlength="20" data-max-chars="20">
+                        <div class="fw-light text-muted justify-content-end d-flex"></div>
+                        @error('password')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="mb-3">

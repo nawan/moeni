@@ -18,42 +18,46 @@ class ToolController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $data = Tool::latest()->get();
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->editColumn('name', function (Tool $tool) {
-                    return $tool->name;
-                })
-                ->editColumn('foto_bahan', function (Tool $tool) {
-                    return $tool->foto_bahan;
-                })
-                ->editColumn('price', function (Tool $tool) {
-                    return number_format($tool->price, 0, ',', '.');
-                })
-                ->editColumn('status_bahan', function (Tool $tool) {
-                    return $tool->status_bahan;
-                })
-                ->editColumn('jml_stok', function (Tool $tool) {
-                    return $tool->jml_stok;
-                })
-                ->addColumn('action', function (Tool $tool) {
-                    $encryptID = Crypt::encrypt($tool->id);
+        if (auth()->user()->is_admin == '1' || auth()->user()->is_admin == '2') {
+            if ($request->ajax()) {
+                $data = Tool::latest()->get();
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->editColumn('name', function (Tool $tool) {
+                        return $tool->name;
+                    })
+                    ->editColumn('foto_bahan', function (Tool $tool) {
+                        return $tool->foto_bahan;
+                    })
+                    ->editColumn('price', function (Tool $tool) {
+                        return number_format($tool->price, 0, ',', '.');
+                    })
+                    ->editColumn('status_bahan', function (Tool $tool) {
+                        return $tool->status_bahan;
+                    })
+                    ->editColumn('jml_stok', function (Tool $tool) {
+                        return $tool->jml_stok;
+                    })
+                    ->addColumn('action', function (Tool $tool) {
+                        $encryptID = Crypt::encrypt($tool->id);
 
-                    $btn = '<form class="d-inline m-1" action=' . route("bahan.destroy", $tool->id) . ' method="POST">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <input type="hidden" name="_token" value=' . csrf_token() . '>
-                    <button class="btn btn-danger btn-sm btn-flat" type="submit" title="Hapus Data Alat" data-toggle="tooltip" data-placement="top" onclick="deleteConfirm(event)"><i class="fas fa-trash"></i></button>
-                    </form>';
-                    $btn = $btn . '<a href=' . route("bahan.edit", $encryptID) . ' class="edit btn btn-warning btn-sm m-1" title="Edit Data Alat" data-toggle="tooltip" data-placement="top"><i class="fas fa-edit"></i></a>';
-                    $btn = $btn . '<a href=' . route("bahan.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="View Data Alat" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
+                        $btn = '<form class="d-inline m-1" action=' . route("bahan.destroy", $tool->id) . ' method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value=' . csrf_token() . '>
+                        <button class="btn btn-danger btn-sm btn-flat" type="submit" title="Hapus Data Alat" data-toggle="tooltip" data-placement="top" onclick="deleteConfirm(event)"><i class="fas fa-trash"></i></button>
+                        </form>';
+                        $btn = $btn . '<a href=' . route("bahan.edit", $encryptID) . ' class="edit btn btn-warning btn-sm m-1" title="Edit Data Alat" data-toggle="tooltip" data-placement="top"><i class="fas fa-edit"></i></a>';
+                        $btn = $btn . '<a href=' . route("bahan.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="View Data Alat" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
 
-                    return $btn;
-                })
-                ->rawColumns(['action', 'modal'])
-                ->make(true);
+                        return $btn;
+                    })
+                    ->rawColumns(['action', 'modal'])
+                    ->make(true);
+            }
+            return view('tool.index');
+        } else {
+            return redirect()->route('error.404');
         }
-        return view('tool.index');
     }
 
     /**
@@ -61,7 +65,11 @@ class ToolController extends Controller
      */
     public function create()
     {
-        return view('tool.create');
+        if (auth()->user()->is_admin == '1' || auth()->user()->is_admin == '2') {
+            return view('tool.create');
+        } else {
+            return redirect()->route('error.404');
+        }
     }
 
     /**
@@ -129,8 +137,8 @@ class ToolController extends Controller
         $data = $request->validate([
             'name' => 'required',
             'status_bahan' => 'required',
-            'jml_stok' => 'required|numeric|min:0|not_in:0',
-            'price' => 'required|numeric|min:0|not_in:0',
+            'jml_stok' => 'required',
+            'price' => 'required',
             'note' => 'required',
             'deskripsi' => 'required',
         ]);
@@ -165,36 +173,40 @@ class ToolController extends Controller
 
     public function bahanHabis(Request $request)
     {
-        if ($request->ajax()) {
-            $data = Tool::where('status_bahan', '=', 'OUT OF STOCK')
-                ->latest()->get();
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->editColumn('name', function (Tool $tool) {
-                    return $tool->name;
-                })
-                ->editColumn('foto_bahan', function (Tool $tool) {
-                    return $tool->foto_bahan;
-                })
-                ->editColumn('price', function (Tool $tool) {
-                    return number_format($tool->price, 0, ',', '.');
-                })
-                ->editColumn('status_bahan', function (Tool $tool) {
-                    return $tool->status_bahan;
-                })
-                ->editColumn('jml_stok', function (Tool $tool) {
-                    return $tool->jml_stok;
-                })
-                ->addColumn('action', function (Tool $tool) {
-                    $encryptID = Crypt::encrypt($tool->id);
-                    $btn = '<a href=' . route("bahan.edit", $encryptID) . ' class="edit btn btn-success btn-sm m-1" title="Update Data Bahan" data-toggle="tooltip" data-placement="top"><i class="fa fa-upload"></i> UPDATE BAHAN</a>';
+        if (auth()->user()->is_admin == '1' || auth()->user()->is_admin == '2') {
+            if ($request->ajax()) {
+                $data = Tool::where('status_bahan', '=', 'OUT OF STOCK')
+                    ->latest()->get();
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->editColumn('name', function (Tool $tool) {
+                        return $tool->name;
+                    })
+                    ->editColumn('foto_bahan', function (Tool $tool) {
+                        return $tool->foto_bahan;
+                    })
+                    ->editColumn('price', function (Tool $tool) {
+                        return number_format($tool->price, 0, ',', '.');
+                    })
+                    ->editColumn('status_bahan', function (Tool $tool) {
+                        return $tool->status_bahan;
+                    })
+                    ->editColumn('jml_stok', function (Tool $tool) {
+                        return $tool->jml_stok;
+                    })
+                    ->addColumn('action', function (Tool $tool) {
+                        $encryptID = Crypt::encrypt($tool->id);
+                        $btn = '<a href=' . route("bahan.edit", $encryptID) . ' class="edit btn btn-success btn-sm m-1" title="Update Data Bahan" data-toggle="tooltip" data-placement="top"><i class="fa fa-upload"></i> UPDATE BAHAN</a>';
 
-                    return $btn;
-                })
-                ->rawColumns(['action', 'modal'])
-                ->make(true);
+                        return $btn;
+                    })
+                    ->rawColumns(['action', 'modal'])
+                    ->make(true);
+            }
+
+            return view('tool.bahanHabis');
+        } else {
+            return redirect()->route('error.404');
         }
-
-        return view('tool.bahanHabis');
     }
 }

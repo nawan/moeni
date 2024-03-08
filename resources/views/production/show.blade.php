@@ -173,7 +173,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="2" class="text-center">
+                                <td colspan="4" class="text-center">
                                     Data Masih Kosong
                                 </td>
                             </tr>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -16,11 +17,15 @@ class TukangController extends Controller
      */
     public function index(Request $request, User $user)
     {
-        $search = $request->search;
-        $tukangs = User::where('is_admin', '=', 4)
-            ->latest()
-            ->paginate(10);
-        return view('tukang.index', compact('tukangs'));
+        if (auth()->user()->is_admin == '1' || auth()->user()->is_admin == '2') {
+            $search = $request->search;
+            $tukangs = User::where('is_admin', '=', 4)
+                ->latest()
+                ->paginate(10);
+            return view('tukang.index', compact('tukangs'));
+        } else {
+            return redirect()->route('error.404');
+        }
     }
 
     /**
@@ -28,7 +33,11 @@ class TukangController extends Controller
      */
     public function create()
     {
-        return view('tukang.create');
+        if (auth()->user()->is_admin == '1' || auth()->user()->is_admin == '2') {
+            return view('tukang.create');
+        } else {
+            return redirect()->route('error.404');
+        }
     }
 
     /**
@@ -44,9 +53,10 @@ class TukangController extends Controller
             'nik' => 'required|unique:App\Models\User,nik',
             'no_kontak' => 'required',
             'alamat' => 'required',
-            'image' => 'required|image'
+            'image' => 'required|image',
+            'password' => 'required',
         ]);
-        $data['password'] = Crypt::encrypt(Str::random(8));
+        $data['password'] = Hash::make($request->password);
         if ($request->file('image')) {
             $data['image'] = $request->file('image')->store('tukang');
         }

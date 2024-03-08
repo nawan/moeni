@@ -8,9 +8,14 @@ use App\Models\Production_tools;
 use App\Models\Production_users;
 use App\Models\Tool;
 use App\Models\User;
+use Illuminate\Database\MultipleColumnsSelectedException;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Yajra\DataTables\DataTables;
+
+use function Laravel\Prompts\select;
 
 class ProductionController extends Controller
 {
@@ -19,41 +24,45 @@ class ProductionController extends Controller
      */
     public function index(Request $request, Production $production)
     {
-        if ($request->ajax()) {
-            $data = Production::latest()->get();
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->editColumn('pre_order', function (Production $production) {
-                    return $production->pre_order;
-                })
-                ->editColumn('user_id', function (Production $production) {
-                    //$client = User::find($production->user_id);
-                    return $production->user->name;
-                })
-                ->editColumn('jenis_box', function (Production $production) {
-                    return $production->jenis_box;
-                })
-                ->editColumn('status_proses', function (Production $production) {
-                    return $production->status_proses;
-                })
-                ->editColumn('price', function (Production $production) {
-                    return number_format($production->total_price, 0, ',', '.');
-                })
-                ->addColumn('action', function (Production $production) {
-                    $encryptID = Crypt::encrypt($production->id);
-                    $btn = '<form class="d-inline m-1" action=' . route("production.destroy", $production->id) . ' method="POST">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <input type="hidden" name="_token" value=' . csrf_token() . '>
-                    <button class="btn btn-danger btn-sm btn-flat" type="submit" title="Hapus Data PO" data-toggle="tooltip" data-placement="top" onclick="deleteConfirm(event)"><i class="fas fa-trash"></i></button>
-                    </form>';
-                    $btn = $btn . '<a href=' . route("production.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="Lihat Event" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
+        if (auth()->user()->is_admin != '4') {
+            if ($request->ajax()) {
+                $data = Production::latest()->get();
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->editColumn('pre_order', function (Production $production) {
+                        return $production->pre_order;
+                    })
+                    ->editColumn('user_id', function (Production $production) {
+                        //$client = User::find($production->user_id);
+                        return $production->user->name;
+                    })
+                    ->editColumn('jenis_box', function (Production $production) {
+                        return $production->jenis_box;
+                    })
+                    ->editColumn('status_proses', function (Production $production) {
+                        return $production->status_proses;
+                    })
+                    ->editColumn('price', function (Production $production) {
+                        return number_format($production->total_price, 0, ',', '.');
+                    })
+                    ->addColumn('action', function (Production $production) {
+                        $encryptID = Crypt::encrypt($production->id);
+                        $btn = '<form class="d-inline m-1" action=' . route("production.destroy", $production->id) . ' method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value=' . csrf_token() . '>
+                        <button class="btn btn-danger btn-sm btn-flat" type="submit" title="Hapus Data PO" data-toggle="tooltip" data-placement="top" onclick="deleteConfirm(event)"><i class="fas fa-trash"></i></button>
+                        </form>';
+                        $btn = $btn . '<a href=' . route("production.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="Lihat Event" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
 
-                    return $btn;
-                })
-                ->rawColumns(['action', 'modal'])
-                ->make(true);
+                        return $btn;
+                    })
+                    ->rawColumns(['action', 'modal'])
+                    ->make(true);
+            }
+            return view('production.index');
+        } else {
+            return redirect()->route('error.404');
         }
-        return view('production.index');
     }
 
     /**
@@ -61,10 +70,14 @@ class ProductionController extends Controller
      */
     public function create()
     {
-        $users = User::where('is_admin', '=', '0')
-            ->latest()->get();
+        if (auth()->user()->is_admin != '4') {
+            $users = User::where('is_admin', '=', '0')
+                ->latest()->get();
 
-        return view('production.create', compact('users'));
+            return view('production.create', compact('users'));
+        } else {
+            return redirect()->route('error.404');
+        }
     }
 
     /**
@@ -108,15 +121,31 @@ class ProductionController extends Controller
      */
     public function edit(string $id)
     {
-        return view('production.edit');
+        $decryptID = Crypt::decrypt($id);
+        $production = Production::find($decryptID);
+
+        return view('production.edit', compact('production'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Production $production)
     {
-        //
+        $data = $request->validate([
+            'pre_order' => 'required',
+            'status_proses' => 'required',
+            'jenis_box' => 'required',
+            'note' => 'required',
+            'total_price' => 'required',
+        ]);
+
+        $data['total_price'] = Str::replace('.', '', $request->total_price);
+
+        $production->update($data);
+
+        toastr()->success('Data Pre Order Berhasil Diperbarui', 'Sukses', ['positionClass' => 'toast-top-full-width', 'closeButton' => true]);
+        return redirect()->route('production.index');
     }
 
     /**
@@ -303,7 +332,7 @@ class ProductionController extends Controller
 
         if ($request->ajax()) {
             $data = User::where('is_admin', '=', '4')
-                ->where('status', '=', $production->status_proses)
+                // ->where('status', '=', $production->status_proses)
                 ->latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -313,8 +342,8 @@ class ProductionController extends Controller
                 ->editColumn('image', function (User $tukang) {
                     return $tukang->image;
                 })
-                ->editColumn('no_kontak', function (User $tukang) {
-                    return $tukang->no_kontak;
+                ->editColumn('status', function (User $tukang) {
+                    return $tukang->status;
                 })
                 ->addColumn('action', function (User $tukang, Request $request) {
                     $production_id = $request->route('id');
@@ -406,7 +435,7 @@ class ProductionController extends Controller
                 })
                 ->addColumn('action', function (Production $production) {
                     $encryptID = Crypt::encrypt($production->id);
-                    $btn = '<a href=' . route("production.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="Lihat Event" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
+                    $btn = '<a href=' . route("production.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="Lihat PO" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
 
                     return $btn;
                 })
@@ -448,11 +477,104 @@ class ProductionController extends Controller
         $decryptID = Crypt::decrypt($id);
         $production = Production::find($decryptID);
 
+        Production_users::where('production_id', $production->id)
+            ->where('pekerjaan', $production->status_proses)
+            ->delete();
+
         $production->status_proses = $request->status_proses;
         $production->save();
 
         toastr()->success('Status Produksi Berhasil Diubah, silahkan tambahkan bahan dan tukang', 'Sukses', ['positionClass' => 'toast-top-full-width', 'closeButton' => true]);
 
         return redirect()->route('production.show', $id);
+    }
+
+    public function prosesTukang(Request $request)
+    {
+        if ($request->ajax()) {
+            $tukang = Auth::user();
+
+            $data = Production_users::where('user_id', '=', $tukang->id)
+                ->where('pekerjaan', '=', $tukang->status)
+                ->latest()->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->editColumn('pre_order', function (Production_users $production_users) {
+                    return $production_users->production->pre_order;
+                })
+                ->editColumn('user_id', function (Production_users $production_users) {
+                    return $production_users->production->user->name;
+                })
+                ->editColumn('jenis_box', function (Production_users $production_users) {
+                    return $production_users->production->jenis_box;
+                })
+                ->editColumn('status_proses', function (Production_users $production_users) {
+                    return $production_users->production->status_proses;
+                })
+                ->editColumn('price', function (Production_users $production_users) {
+                    return number_format($production_users->production->total_price, 0, ',', '.');
+                })
+                ->addColumn('action', function (Production_users $production_users) {
+
+                    $encryptID = Crypt::encrypt($production_users->production_id);
+                    if ($production_users->production->status_proses == auth()->user()->status) {
+                        $btn = '<form class="d-flex justify-content-between gap-1" action=' . route("production.pindah-proses", $encryptID) . ' method="POST">
+                        <input type="hidden" name="_token" value=' . csrf_token() . '>
+                        <select class="form-select fw-bold" id="status_proses" name="status_proses">
+                            <option selected value="">--Silahkan Pilih--</option>
+                            <option value="DESIGNING">Designing</option>
+                            <option value="MACHINING">Machining</option>
+                            <option value="ASSEMBLING">Assembling</option>
+                            <option value="PAINTING">Painting</option>
+                            <option value="INSTALLATION">Installation</option>
+                            <option value="TUNING">Tuning</option>
+                            <option value="PACKING">Packing</option>
+                            <option value="DELIVERY">Delivery</option>
+                        </select>
+                        <button class="btn btn-success btn-sm" title="Pindah Proses" data-toggle="tooltip" data-placement="top" type="submit"><i class="fa fa-arrow-right"></i></button>
+                    </form>';
+                    } else {
+                        $btn = '<form class="d-flex justify-content-between gap-1" action=' . route("production.pindah-proses", $encryptID) . ' method="POST">
+                        <input type="hidden" name="_token" value=' . csrf_token() . '>
+                        <input type="text" class="fw-bold p-2" name="status_proses" value=' . $production_users->production->status_proses . ' disabled>
+                        <button class="btn btn-secondary btn-sm" title="Pindah Proses" data-toggle="tooltip" data-placement="top" type="submit" disabled><i class="fa fa-arrow-right"></i></button>
+                    </form>';
+                    }
+
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('production.tukang-proses');
+    }
+
+    public function ubahProsesTukang(String $id, Request $request)
+    {
+        $decryptID = Crypt::decrypt($id);
+        $production = Production::find($decryptID);
+
+        if ($request->status_proses == "") {
+            toastr()->error('Status Produksi Belum Diganti, Silahkan Pilih Tahapan Proses', 'Error', [
+                'positionClass' => 'toast-top-full-width',
+                'closeButton' => true
+            ]);
+        } else {
+
+            Production_users::where('production_id', $production->id)
+                ->where('pekerjaan', $production->status_proses)
+                ->delete();
+
+            $production->status_proses = $request->status_proses;
+            $production->save();
+
+            toastr()->success('Status Produksi Berhasil Diganti', 'Berhasil', [
+                'positionClass' => 'toast-top-full-width',
+                'closeButton' => true
+            ]);
+        }
+
+        return redirect()->route('production.prosesTukang');
     }
 }

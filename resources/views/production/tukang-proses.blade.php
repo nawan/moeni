@@ -11,6 +11,41 @@
 <link rel="stylesheet" href="{{ URL::asset('assets/bootstrap-5/css/responsive.dataTables.min.css') }}">
 {{-- datatables row order css --}}
 <link rel="stylesheet" href="{{ URL::asset('assets/bootstrap-5/css/rowReorder.dataTables.min.css') }}">
+<style>
+    .container{
+        width: auto;
+        margin: 0 auto;
+    }
+
+    ul.tabs{
+        margin: 0px;
+        padding: 0px;
+        list-style: none;
+    }
+    ul.tabs li{
+        background: none;
+        color: #222;
+        display: inline-block;
+        padding: 10px 15px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    ul.tabs li.current{
+        background: #ededed;
+        color: #222;
+    }
+
+    .tab-content{
+        display: none;
+        background: #ededed;
+        padding: 15px;
+    }
+
+    .tab-content.current{
+        display: inherit;
+    }
+</style>
 @endpush
 
 @push('script')
@@ -18,6 +53,7 @@
 <script type="text/javascript" src="{{ URL::asset('assets/jquery/jquery.min.js') }}"></script>
 {{-- bootstrap password jscript --}}
 <script type="text/javascript" src="{{ URL::asset('assets/bootstrap-5/js/bootstrap-show-password.min.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('assets/bootstrap-5/js/bootstrap.bundle.min.js') }}"></script>
 {{-- sweet alert2 js --}}
 <script type="text/javascript" src="{{ URL::asset('assets/sweet-alert/js/sweetalert2.all.min.js') }}"></script>
 {{-- sweet alert js --}}
@@ -66,18 +102,18 @@
     });
 }
 </script>
+{{-- datatable done --}}
 <script type="text/javascript">
     $(function() {
         $('[data-toggle="tooltip"]').tooltip();
 
-        var table = $('#data-production').DataTable({
+        var table = $('#proses-tukang').DataTable({
             responsive: true,
             rowReorder: {
                 selector: 'td:nth-child(2)'
             },
             processing: true,
             serverSide: true,
-            ajax: "{{ route('production.index') }}",
             columnDefs: [{
                     targets: '_all',
                     className: 'dt-center',
@@ -111,7 +147,7 @@
                     data: 'status_proses',
                     name: 'status_proses',
                     render: function(data, type, full, meta) {
-                        return "<span class=\"text-capitalize fw-bold badge bg-primary\">"+ data +"</span>";
+                        return "<span class=\"text-capitalize badge bg-primary\">"+ data +"</span>";
                     }
                 },
                 {
@@ -157,6 +193,7 @@
 
     });
 </script>
+
 @endpush
 
 @extends('layouts.main')
@@ -166,20 +203,91 @@
     <ol class="breadcrumb my-auto p-2">
         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i class="fas fa-home mt-1"></i></a></li>
         <li class="breadcrumb-item" aria-current="page">Produksi</li>
-        <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('production.index') }}">Data PO</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('production.proses') }}">Status PO</a></li>
     </ol>
 </nav>
 
 <section class="content">
-    <div class="card mt-10 mb-5">
+    <div class="card mt-10 mb-2">
+        <div class="card-header fw-bold text-uppercase text-center text-white bg-info">
+            profil saya
+        </div>
+        <div class="card-body bg-light p-1">
+            <div class="card-group">
+                <div class="card-body col-md-4 text-center">
+                    <div class="card-img mb-3">
+                        <img src="{{ asset('storage/' .auth()->user()->image) }}" class="img-fluid rounded-circle" alt="foto profil" width="160"  style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#detail-image">
+                    </div>
+
+                        {{-- modal view profil image --}}
+                        <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="detail-image" tabindex="-1" aria-labelledby="Foto profil {{ auth()->user()->image }}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content bg-transparent" style="border: none">
+                                    <div class="d-flex justify-content-end">
+                                        <button type="button" class="btn-close-white" data-bs-dismiss="modal"><i class="fa" style="font-size: 2rem;">&#xf00d;</i></button>
+                                    </div>
+                                    <div class="modal-body d-flex justify-content-center">
+                                        <img src="{{ asset('storage/' . auth()->user()->image) }}" style="width:100%;max-width:600px">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    <p class="text-capitalize fw-bold text-muted h6">{{ auth()->user()->name }}</p>
+                    <p class="text-uppercase fw-bold h4">
+                        <span class="badge bg-primary">
+                            {{ auth()->user()->status }}
+                        </span>
+                    </p>
+                </div>
+                <div class="card-body col-md-8 fw-bold">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">No Kontak</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{ auth()->user()->no_kontak }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Email</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{ auth()->user()->email }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Alamat</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted text-capitalize mb-0">{{ auth()->user()->alamat }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Terdaftar Sejak</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted text-capitalize mb-0">{{ \Carbon\Carbon::parse(auth()->user()->created_at)->diffForHumans() }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-5">
         <div class="card-header text-center fw-bold text-uppercase mb-10 bg-dark text-white">
-            Data Pre Order Box
+            Status Pekerjaan
         </div>
         <div class="card-body">
-            <div class="d-flex mt-4 mb-3">
-                <a href="{{ route('production.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus-square"></i> Tambah PO</a>
-            </div>
-            <table class="table table-bordered table-hover text-center align-middle stripe" id="data-production" style="width:100%;">
+            <table class="table table-bordered table-hover text-center align-middle stripe" id="proses-tukang" style="width:100%;">
                 <thead class="thead thead-light bg-secondary text-white table-bordered">
                     <tr class="text-center">
                         <th scope="col">No</th>
@@ -188,13 +296,13 @@
                         <th scope="col">Jenis Box</th>
                         <th scope="col">Proses</th>
                         <th scope="col">Harga</th>
-                        <th scope="col">Aksi</th>
+                        <th scope="col">Proses</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="6" class="text-center">
-                            Data Kosong
+                        <td colspan="7" class="text-center mt-2 mb-2">
+                            Anda Belum Memiliki Pekerjaan
                         </td>
                     </tr>
                 </tbody>

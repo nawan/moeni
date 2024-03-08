@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CetakController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\ProfileController;
@@ -43,6 +44,8 @@ Route::middleware(['auth'])->resource('/production', ProductionController::class
 Route::middleware(['auth'])->resource('/payment', PaymentController::class);
 Route::middleware(['auth'])->resource('/cetak', CetakController::class);
 
+Route::get('error', [ErrorController::class, 'error404'])->middleware(['auth'])->name('error.404');
+
 Route::get('preview/{id}', [CetakController::class, 'preview'])->middleware(['auth'])->name('cetak.preview');
 Route::get('print/{id}', [CetakController::class, 'print'])->middleware(['auth'])->name('cetak.print');
 
@@ -54,8 +57,10 @@ Route::get('/history', [PaymentController::class, 'history'])->middleware(['auth
 Route::get('/dashboard', DashboardController::class)->middleware(['auth'])->name('dashboard');
 Route::get('/bahan-habis', [ToolController::class, 'bahanHabis'])->middleware(['auth'])->name('bahan.habis');
 
+Route::get('/proses-tukang', [ProductionController::class, 'prosesTukang'])->middleware(['auth'])->name('production.prosesTukang');
 Route::get('/proses', [ProductionController::class, 'proses'])->middleware(['auth'])->name('production.proses');
 Route::post('ubah-proses/{id}', [ProductionController::class, 'ubahProses'])->middleware(['auth'])->name('production.ubah-proses');
+Route::post('pindah-proses/{id}', [ProductionController::class, 'ubahProsesTukang'])->middleware(['auth'])->name('production.pindah-proses');
 Route::get('production-tool/{id}', [ProductionController::class, 'productionTool'])->middleware(['auth'])->name('production.tool');
 Route::get('production-user/{id}', [ProductionController::class, 'productionUser'])->middleware(['auth'])->name('production.user');
 //Route::post('tambah-bahan/{id}', [ProductionController::class, 'tambahBahan'])->middleware(['auth'])->name('tambah.bahan');
