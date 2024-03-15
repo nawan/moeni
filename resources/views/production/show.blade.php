@@ -5,6 +5,46 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
 {{-- sweet alert2 css --}}
 <link rel="stylesheet" href="{{ URL::asset('assets/sweet-alert/css/sweetalert2.min.css') }}" />
+<style>
+        .tooltips {
+    position: relative;
+    display: inline-block;
+    }
+
+    .tooltips .tooltiptext {
+    visibility: hidden;
+    width: 140px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -75px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    }
+
+    .tooltips .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+    }
+
+    .tooltips:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+    }
+</style>
+
 @endpush
 
 @push('script')
@@ -25,6 +65,39 @@
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
+</script>
+<script>
+    function showGenerate() {
+        var x = document.getElementById("showElement");
+        var lable = $(".btn-generate").text().trim();
+
+        if (x.style.display === "none") {
+            x.style.display = "block";
+            $(".btn-generate").text("Hide Link");
+        } else {
+            x.style.display = "none";
+            $(".btn-generate").text("Generate Link");
+        }
+    }
+</script>
+<script>
+    function copyText() {
+        /* Get the text field */
+    var copyText = document.getElementById("myInput");
+        /* Select the text field */
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+        /* Copy the text inside the text field */
+    document.execCommand("copy");
+    
+    var tooltip = document.getElementById("myTooltip");
+    tooltip.innerHTML = "Link Copied";
+    }
+
+    function updateText() {
+    var tooltip = document.getElementById("myTooltip");
+    tooltip.innerHTML = "Copy URL Link";
+    }
 </script>
 @endpush
 
@@ -80,9 +153,42 @@
                         <p class="fst-italic text-capitalize">
                             {!! html_entity_decode($production->note, ENT_QUOTES, 'UTF-8' ) !!}
                         </p>
+                        <p class="card-text fw-bold m-0">
+                            <button class="btn btn-sm btn-success btn-generate fw-bold" onclick="showGenerate()" title="Generate URL Link" data-toogle="tooltip" data-placement="top">Generate Link</button>
+                        </p>
+                        <div class="tooltips" id="showElement" style="display: none;">
+                            <div class="input-group mt-2">
+                                <input type="text" class="form-control" id="myInput" value="{{ $generate_url }}" maxlength="15" data-max-chars="15" readonly>
+                                <button class="btn btn-sm btn-primary" onclick="copyText()" onmouseout="updateText()">
+                                    <span class="tooltiptext" id="myTooltip">Copy Link</span>
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        {{-- <div class="container">
+                            <div class="copy-text">
+                                <input type="text" class="text" value="david@stylus.co.za" />
+                                <button><i class="fa fa-clone"></i></button>
+                            </div>
+                        </div> --}}
+
+                        {{-- <!-- The text field -->
+                        <input type="text" value="Hello World" id="myInput">
+
+                        <!-- The button used to copy the text -->
+                        <div class="tooltips">
+                        <button class="btn btn-primary" onclick="copyText()" onmouseout="updateText()">
+                        <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>
+                        Copy text
+                        </button>
+                        </div> --}}
+
                     </div>
                 </div>
                 <div class="d-flex justify-content-end mt-3">
+                    {{-- <button class="btn btn-sm btn-success" title="Generate Link" data-toggle="tooltip" data-placement="top" data-toggle="modal" data-target="#showLink"><i class="fas fa-link"></i></button> --}}
+                    {{-- <a href="#" class="btn btn-sm btn-success m-1" title="Generate Link" data-toggle="tooltip" data-placement="top" data-toggle="modal" data-target="#showLink"><i class="fas fa-link"></i></a> --}}
                     @php $encryptID = Crypt::encrypt($production->id); @endphp
                     @if ($production->status_proses == 'DONE')
                     <a href="{{ route('production.edit', $encryptID) }}"class="btn btn-sm btn-secondary m-1 disabled" title="Edit PO" data-toggle="tooltip" data-placement="top"><i class="fas fa-edit"></i></a>

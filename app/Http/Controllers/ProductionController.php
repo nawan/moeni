@@ -108,12 +108,18 @@ class ProductionController extends Controller
     public function show(string $id)
     {
         $decryptID = Crypt::decrypt($id);
-        $production = Production::find($decryptID);
+        $production = Production::findOrFail($decryptID);
         $productionTools = Production_tools::where('production_id', '=', $production->id)
             ->latest()->paginate();
         $productionUsers = Production_users::where('production_id', '=', $production->id)
             ->latest()->paginate();
-        return view('production.show', compact('production', 'productionTools', 'productionUsers'));
+
+        //url link to client
+        $url_id = base64_encode($decryptID);
+        $generate_url = url("/order/{$url_id}");
+        //$generate_url = url("/order/{$decryptID}");
+
+        return view('production.show', compact('production', 'productionTools', 'productionUsers', 'generate_url'));
     }
 
     /**
@@ -530,6 +536,7 @@ class ProductionController extends Controller
                             <option value="TUNING">Tuning</option>
                             <option value="PACKING">Packing</option>
                             <option value="DELIVERY">Delivery</option>
+                            <option value="DELIVERY">Done</option>
                         </select>
                         <button class="btn btn-success btn-sm" title="Pindah Proses" data-toggle="tooltip" data-placement="top" type="submit"><i class="fa fa-arrow-right"></i></button>
                     </form>';
