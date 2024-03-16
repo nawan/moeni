@@ -49,8 +49,8 @@
     }  
 </style>
 <!-- Font Awesome -->
-<link rel="stylesheet" href="assets/fontawesome-free/css/all.min.css">
-<link rel="stylesheet" href="css/bg.css">
+<link rel="stylesheet" href="/assets/fontawesome-free/css/all.min.css">
+<link rel="stylesheet" href="/css/bg.css">
 {{-- bootstrap@5.3.0-alpha3 css --}}
 <link rel="stylesheet" href="{{ URL::asset('/assets/bootstrap-5/css/bootstrap.min.css') }}" />
 <body class="bg-login">
