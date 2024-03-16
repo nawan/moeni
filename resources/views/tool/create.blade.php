@@ -92,7 +92,7 @@
                         <input type="text" class="form-control count-chars text-uppercase @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" maxlength="50" data-max-chars="50">
                         <div class="fw-light text-muted justify-content-end d-flex"></div>
                         @error('name')
-                        <span class="invalid-feedback">{{ $message }}</span>
+                        <span class="invalid-feedback">Nama Bahan Masih Kosong</span>
                         @enderror
                     </div>
                 </div>
@@ -105,7 +105,7 @@
                         </div>
                         <div class="fw-light text-muted justify-content-end d-flex"></div>
                         @error('price')
-                        <span class="invalid-feedback">{{ $message }}</span>
+                        <span class="invalid-feedback">Harga Masih Kosong</span>
                         @enderror
                     </div>
                     <div class="form-group col-md-4 mb-3">

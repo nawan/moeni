@@ -60,7 +60,7 @@
                     {{-- order sumary --}}
                     <div class="py-2 mt-2">
                         <div class="table-responsive">
-                            <p class="fst-italic" style="font-size: 1rem">Dengan detail sewa alat sebagai berikut :</p>
+                            <p class="fst-italic" style="font-size: 1rem">Dengan detail pre order box sebagai berikut :</p>
                             <table class="table align-middle nowrap mb-0" style="font-size: 0.8rem">
                                 <thead>
                                     <tr class="bg-light">

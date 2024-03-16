@@ -5,6 +5,7 @@ use App\Http\Controllers\CetakController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ErrorController;
+use App\Http\Controllers\LinkController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\ProfileController;
@@ -43,6 +44,7 @@ Route::middleware(['auth'])->resource('/bahan', ToolController::class);
 Route::middleware(['auth'])->resource('/production', ProductionController::class);
 Route::middleware(['auth'])->resource('/payment', PaymentController::class);
 Route::middleware(['auth'])->resource('/cetak', CetakController::class);
+Route::get('order/{id}', [LinkController::class, 'show'])->name('order');
 
 Route::get('error', [ErrorController::class, 'error404'])->middleware(['auth'])->name('error.404');
 
