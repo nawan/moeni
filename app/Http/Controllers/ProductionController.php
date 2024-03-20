@@ -33,7 +33,6 @@ class ProductionController extends Controller
                         return $production->pre_order;
                     })
                     ->editColumn('user_id', function (Production $production) {
-                        //$client = User::find($production->user_id);
                         return $production->user->name;
                     })
                     ->editColumn('jenis_box', function (Production $production) {
@@ -44,6 +43,9 @@ class ProductionController extends Controller
                     })
                     ->editColumn('price', function (Production $production) {
                         return number_format($production->total_price, 0, ',', '.');
+                    })
+                    ->editColumn('status_payment', function (Production $production) {
+                        return $production->status_payment;
                     })
                     ->addColumn('action', function (Production $production) {
                         $encryptID = Crypt::encrypt($production->id);
@@ -95,8 +97,8 @@ class ProductionController extends Controller
 
         $data['total_price'] = 0;
 
-        $id = Production::create($data)->id;
-        $encryptID = Crypt::encrypt($id);
+        $production_id = Production::create($data)->id;
+        $encryptID = Crypt::encrypt($production_id);
 
         toastr()->success('Data Pre Order Berhasil Ditambahkan', 'Sukses', ['positionClass' => 'toast-top-full-width', 'closeButton' => true]);
         return redirect()->route('production.show', $encryptID);

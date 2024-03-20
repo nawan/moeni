@@ -115,6 +115,21 @@
                     }
                 },
                 {
+                    data: 'status_payment',
+                    name: 'status_payment',
+                    render: function(data) {
+                        if (data == 'DOWN PAYMENT') {
+                            return "<span class=\"badge bg-success text-capitalize\">down payment</span>";
+                        } else if (data == 'PELUNASAN/PAID'){
+                            return "<span class=\"badge bg-success text-capitalize\">pelunasan</span>";
+                        } else if(data == 'DOWN PAYMENT/PAID') {
+                            return "<span class=\"badge bg-success text-capitalize\">down payment</span>";
+                        } else {
+                            return "<span class=\"badge bg-success text-capitalize\">full payment</span>";
+                        }
+                    }
+                },
+                {
                     data: 'payment_date',
                     name: 'payment_date',
                     render: function(data, type, full, meta) {
@@ -184,6 +199,7 @@
                         <th scope="col">Pre Order</th>
                         <th scope="col">Jenis Box</th>
                         <th scope="col">Total Bayar</th>
+                        <th scope="col">Status Bayar</th>
                         <th scope="col">Tanggal Bayar</th>
                         <th scope="col">Aksi</th>
                     </tr>

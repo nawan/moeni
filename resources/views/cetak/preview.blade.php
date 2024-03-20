@@ -105,6 +105,7 @@
                                                 <tr class="bg-light">
                                                     <th class="text-center">Nama PO</th>
                                                     <th class="text-center">Jenis Box</th>
+                                                    <th class="text-center">Status Bayar</th>
                                                     <th class="text-center">Metode Bayar</th>
                                                     <th class="text-center">Daftar Bahan</th>
                                                     <th class="text-end">TOTAL</th>
@@ -114,6 +115,17 @@
                                                 <tr>
                                                     <td class="text-center text-uppercase">{{ $payment->production->pre_order }}</td>
                                                     <td class="text-center text-uppercase">{{ $payment->production->jenis_box }}</td>
+                                                    <td class="text-center text-uppercase">
+                                                        @if ($payment->status_payment == 'DOWN PAYMENT')
+                                                            <span>down payment</span>
+                                                        @elseif ($payment->status_payment == 'DOWN PAYMENT/PAID')
+                                                            <span>down payment</span>
+                                                        @elseif ($payment->status_payment == 'PELUNASAN/PAID')
+                                                            <span>pelunasan</span>
+                                                        @else
+                                                            <span>full payment</span>
+                                                        @endif
+                                                    </td>
                                                     <td class="text-center text-uppercase">{{ $payment->payment_method }}</td>
                                                     <td class="text-center">
                                                         @forelse($production_tools as $bahan)
@@ -187,6 +199,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="d-flex justify-content-end m-3">
+            <a href="{{ route('cetak.index') }}" class="btn btn-primary">Kembali</a>
         </div>
     </div>
 </section>

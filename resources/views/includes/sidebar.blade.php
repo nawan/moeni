@@ -114,6 +114,9 @@
                         <a class="nav-link collapsed" href="{{ route('payment.index') }}">
                             Bayar 
                         </a>
+                        <a class="nav-link collapsed" href="{{ route('payment.dp') }}">
+                            Pelunasan 
+                        </a>
                         <a class="nav-link collapsed" href="{{ route('payment.history') }}">
                             Riwayat
                         </a>

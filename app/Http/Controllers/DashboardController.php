@@ -32,7 +32,6 @@ class DashboardController extends Controller
 
             //jumlah PO
             $jumlahPO = Production::where('status_proses', '!=', 'DONE')
-                ->orWhere('status_proses', '!=', 'PAID')
                 ->count();
 
             //total pendapatan
@@ -40,8 +39,7 @@ class DashboardController extends Controller
             $totalPendapatan = $payment->sum('payment_amount');
 
             //potensi pendapatan
-            $dataPO = Production::where('status_proses', '!=', 'DONE')
-                ->orWhere('status_proses', '!=', 'PAID')
+            $dataPO = Production::where('status_payment', '=', 'PENDING')
                 ->latest()->get();
             $potensiPendapatan = $dataPO->sum('total_price');
 

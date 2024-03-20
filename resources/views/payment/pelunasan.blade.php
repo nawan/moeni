@@ -50,18 +50,18 @@
     <ol class="breadcrumb my-auto p-2">
         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i class="fas fa-home mt-1"></i></a></li>
         <li class="breadcrumb-item" aria-current="page">Pembayaran</li>
-        <li class="breadcrumb-item" aria-current="page"><a href="{{ route('payment.index') }}">Data Bayar</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('payment.bayar') }}">Bayar</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="{{ route('payment.dp') }}">Data Pelunasan</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="#">Pelunasan</a></li>
     </ol>
 </nav>
 
 <div class="card mt-10 mb-5">
     <div class="card-header text-center fw-bold text-uppercase mb-10 bg-success text-white">
-        Formulir Pembayaran Order {{ $production->jenis_box }}
+        Formulir Pelunasan Order {{ $production->jenis_box }}
     </div>
     <div class="card-group">
         <div class="card-body">
-            <form action="{{ route('payment.store', $production->id) }}" method="POST" enctype="multipart/form-data" class="mb-4">
+            <form action="{{ route('payment.pelunasanStore', $payment->id) }}" method="POST" enctype="multipart/form-data" class="mb-4">
                 @csrf()
                     <div class="card-group">
                         <div class="card-body text-center align-middle col-md-6">
@@ -155,12 +155,44 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card-body col-md-12">
+                        <div class="card-header text-uppercase text-center fw-bold text-white bg-secondary">
+                            down payment
+                        </div>
+                        <div class="card-body bg-light">
+                            <div class="card-group">
+                                <div class="card-body col-md-6">
+                                    <div class="card-img mt-2">
+                                        <img src="{{ asset('storage/' . $payment->payment_proof) }}" class="rounded mx-auto d-block img-thumbnail mb-2" width="250" alt="">
+                                    </div>
+                                </div>
+                                <div class="card-body col-md-6">
+                                    <p class="card-text fw-bold m-0">Jumlah Down Payment</p>
+                                    <p class="fst-italic mb-2">
+                                        Rp {{ number_format($payment->payment_amount, 0, ',', '.') }}
+                                    </p>
+                                    <p class="card-text fw-bold m-0">Tanggal Bayar</p>
+                                    <p class="fst-italic mb-2">{{ \Carbon\Carbon::parse($payment->payment_date)->isoFormat('dddd, D MMMM Y') }}</p>
+                                    <p class="card-text fw-bold m-0">Jumlah Kekurangan</p>
+                                    <p class="fst-italic text-capitalize mb-2">
+                                        Rp {{ number_format(($payment->total_price) - ($payment->payment_amount), 0, ',', '.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="card-body col-md-12">
                         <div class="row mb-3 card-text">
                             <div class="form-group col-md-6" style="display:none">
                                 <input type="text" class="form-control text-capitalize count-chars @error('user_id') is-invalid @enderror" id="user_id" name="user_id" value="{{ old('user_id', $production->user_id) }}" maxlength="20" data-max-chars="20" hidden>
                                 @error('user_id')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-6" style="display:none">
+                                <input type="text" class="form-control text-capitalize count-chars @error('payment_id') is-invalid @enderror" id="payment_id" name="payment_id" value="{{ old('payment_id', $payment->id) }}" maxlength="20" data-max-chars="20" hidden>
+                                @error('payment_id')
                                 <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -185,15 +217,15 @@
                         </div>
                         <div class="row mb-3 card-text">
                             <div class="form-group col-md-4">
-                                <label for="status_payment" class="form-label">Jenis Pembayaran</label>
-                                <select class="form-select @error('status_payment') is-invalid @enderror" id="status_payment" name="status_payment">
-                                    <option value="">-- Pilih Jenis Pembayaran --</option>
-                                    <option value="DOWN PAYMENT">Down Payment</option>
-                                    <option value="PAID">Full Payment</option>
-                                </select>
-                                @error('status_payment')
+                                <label for="payment_amount" class="form-label">Nominal Diterima</label>
+                                <div class="input-group">
+                                    <div class="input-group-text">Rp</div>
+                                    <input type="text" class="form-control count-chars @error('payment_amount') is-invalid @enderror" name="payment_amount" id="currency" value="{{ old('payment_amount') }}" maxlength="15" data-max-chars="15">
+                                </div>
+                                <div class="fw-light text-muted justify-content-end d-flex"></div>
+                                @error('payment_amount')
                                 <span class="invalid-feedback">
-                                    Jenis Pembayaran tidak boleh kosong
+                                    Nominal Pembayaran tidak boleh kosong
                                 </span>
                                 @enderror
                             </div>
@@ -221,30 +253,15 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="row mb-3 card-text">
-                            <div class="form-group col-md-4">
-                                <label for="payment_amount" class="form-label">Nominal Diterima</label>
-                                <div class="input-group">
-                                    <div class="input-group-text">Rp</div>
-                                    <input type="text" class="form-control count-chars @error('payment_amount') is-invalid @enderror" name="payment_amount" id="currency" value="{{ old('payment_amount') }}" maxlength="15" data-max-chars="15">
-                                </div>
-                                <div class="fw-light text-muted justify-content-end d-flex"></div>
-                                @error('payment_amount')
-                                <span class="invalid-feedback">
-                                    Nominal Pembayaran tidak boleh kosong
-                                </span>
-                                @enderror
+                        <div class="form-group col-md-12">
+                            <label for="payment_proof" class="form-label">Foto Bukti Pembayaran</label>
+                            <img src="" class="mb-3 img-preview img-fluid col-sm-5" alt="">
+                            <input class="form-control @error('payment_proof') is-invalid @enderror" type="file" id="image" name="payment_proof" onchange="previewImage()">
+                            @error('payment_proof') 
+                            <div class="invalid-feedback">
+                                Bukti Pembayaran tidak boleh kosong
                             </div>
-                            <div class="form-group col-md-8">
-                                <label for="payment_proof" class="form-label">Foto Bukti Pembayaran</label>
-                                <img src="" class="mb-3 img-preview img-fluid col-sm-5" alt="">
-                                <input class="form-control @error('payment_proof') is-invalid @enderror" type="file" id="image" name="payment_proof" onchange="previewImage()">
-                                @error('payment_proof') 
-                                <div class="invalid-feedback">
-                                    Bukti Pembayaran tidak boleh kosong
-                                </div>
-                                @enderror
-                            </div>
+                            @enderror
                         </div>
                         <div class="mb-3 card-text" style="display:none">
                             <label for="payment_code">Payment Code</label>
@@ -257,7 +274,7 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-end mt-3 gap-2">
-                        <a href="{{ route('payment.index') }}" class="btn btn-danger">Batal</a>
+                        <a href="{{ route('payment.dp') }}" class="btn btn-danger">Batal</a>
                         <button type="submit" class="btn btn-primary">Bayar</button>
                     </div>
             </form>

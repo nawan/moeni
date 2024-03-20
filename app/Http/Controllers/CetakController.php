@@ -33,6 +33,9 @@ class CetakController extends Controller
                     ->editColumn('payment_amount', function (Payment $payment) {
                         return number_format($payment->payment_amount, 0, ',', '.');
                     })
+                    ->editColumn('status_payment', function (Payment $payment) {
+                        return $payment->status_payment;
+                    })
                     ->editColumn('payment_proof', function (Payment $payment) {
                         return $payment->payment_proof;
                     })

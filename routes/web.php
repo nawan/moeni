@@ -53,6 +53,9 @@ Route::get('print/{id}', [CetakController::class, 'print'])->middleware(['auth']
 
 Route::get('bayar/{id}', [PaymentController::class, 'bayar'])->middleware(['auth'])->name('payment.bayar');
 Route::post('bayarStore/{id}', [PaymentController::class, 'bayarStore'])->middleware(['auth'])->name('payment.store');
+Route::get('/DP', [PaymentController::class, 'downPayment'])->middleware(['auth'])->name('payment.dp');
+Route::get('pelunasan/{id}', [PaymentController::class, 'pelunasan'])->middleware(['auth'])->name('payment.pelunasan');
+Route::post('pelunasanStore/{id}', [PaymentController::class, 'pelunasanStore'])->middleware(['auth'])->name('payment.pelunasanStore');
 Route::get('/history', [PaymentController::class, 'history'])->middleware(['auth'])->name('payment.history');
 
 

@@ -122,6 +122,19 @@
                     }
                 },
                 {
+                    data: 'status_payment',
+                    name: 'status_payment',
+                    render: function(data) {
+                        if (data == 'DOWN PAYMENT') {
+                            return "<span class=\"badge bg-success text-uppercase\">DOWN PAYMENT</span>";
+                        } else if (data == 'PAID') {
+                            return "<span class=\"badge bg-success text-uppercase\">LUNAS</span>";
+                        } else {
+                            return "<span class=\"badge bg-success text-uppercase\">BELUM BAYAR</span>";
+                        }
+                    }
+                },
+                {
                     data: 'action',
                     name: 'action',
                     orderable: true,
@@ -188,6 +201,7 @@
                         <th scope="col">Jenis Box</th>
                         <th scope="col">Proses</th>
                         <th scope="col">Harga</th>
+                        <th scope="col">Status Bayar</th>
                         <th scope="col">Aksi</th>
                     </tr>
                 </thead>

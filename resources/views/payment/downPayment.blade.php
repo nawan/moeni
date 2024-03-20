@@ -70,13 +70,14 @@
     $(function() {
         $('[data-toggle="tooltip"]').tooltip();
 
-        var table = $('#data-cetak').DataTable({
+        var table = $('#data-pelunasan').DataTable({
             responsive: true,
             rowReorder: {
                 selector: 'td:nth-child(2)'
             },
             processing: true,
             serverSide: true,
+            ajax: "{{ route('payment.dp',) }}",
             columnDefs: [{
                     targets: '_all',
                     className: 'dt-center',
@@ -107,35 +108,11 @@
                     }
                 },
                 {
-                    data: 'payment_amount',
-                    name: 'payment_amount',
+                    data: 'total_price',
+                    name: 'total_price',
                     render: function(data, type, full, meta) {
                         return "<span class=\"text-capitalize\">rp "+ data +"</span>";
                     }
-                },
-                {
-                    data: 'status_payment',
-                    name: 'status_payment',
-                    render: function(data) {
-                        if (data == 'DOWN PAYMENT') {
-                            return "<span class=\"badge bg-success text-capitalize\">down payment</span>";
-                        } else if (data == 'PELUNASAN/PAID'){
-                            return "<span class=\"badge bg-success text-capitalize\">pelunasan</span>";
-                        } else if(data == 'DOWN PAYMENT/PAID') {
-                            return "<span class=\"badge bg-success text-capitalize\">down payment</span>";
-                        } else {
-                            return "<span class=\"badge bg-success text-capitalize\">full payment</span>";
-                        }
-                    }
-                },
-                {
-                    data: 'payment_proof',
-                    name: 'payment_proof',
-                    render: function(data, type, full, meta) {
-                        return "<img src=\"storage/" + data + "\" width=\"120\" height=\"60\"/>";
-                    },
-                    orderable: true,
-                    searchable: true
                 },
                 {
                     data: 'action',
@@ -181,33 +158,31 @@
 <nav aria-label="breadcrumb" class="navbar navbar-light bg-light mb-4 mt-4" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);">
     <ol class="breadcrumb my-auto p-2">
         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i class="fas fa-home mt-1"></i></a></li>
-        <li class="breadcrumb-item" aria-current="page">Cetak</li>
-        <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('cetak.index') }}">Bukti Bayar</a></li>
+        <li class="breadcrumb-item" aria-current="page">Pembayaran</li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('payment.dp') }}">Data Pelunasan</a></li>
     </ol>
 </nav>
 
 <section class="content mb-10">
     <div class="card mt-10 mb-5">
         <div class="card-header text-center fw-bold text-uppercase mb-10 bg-dark text-white">
-            Cetak Bukti Pembayaran
+            Data Pelunasan
         </div>
         <div class="card-body">
-            <table class="table table-bordered table-hover text-center align-middle stripe" id="data-cetak" style="width:100%;">
+            <table class="table table-bordered table-hover text-center align-middle stripe" id="data-pelunasan" style="width:100%;">
                 <thead class="thead thead-light bg-secondary text-white table-bordered">
                     <tr class="text-center">
                         <th scope="col">No</th>
                         <th scope="col">Nama Client</th>
                         <th scope="col">Pre Order</th>
                         <th scope="col">Jenis Box</th>
-                        <th scope="col">Total Bayar</th>
-                        <th scope="col">Jenis Bayar</th>
-                        <th scope="col">Bukti Bayar</th>
+                        <th scope="col">Kekurangan</th>
                         <th scope="col">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="7" class="text-center">
+                        <td colspan="6" class="text-center">
                             Data Masih Kosong
                         </td>
                     </tr>

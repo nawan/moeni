@@ -140,7 +140,7 @@
             </div>
             <div class="card-body col-md-12">
                 <div class="card-header text-white text-uppercase text-center fw-bold bg-secondary">
-                    Bukti Bayar
+                    Bukti Bayar 
                 </div>
                 <div class="card-body bg-light">
                     <div class="card-group">
@@ -150,6 +150,17 @@
                             </div>
                         </div>
                         <div class="card-body col-md-6">
+                            <p class="card-text fw-bold mb-2">Status Pembayaran : 
+                                @if ($payment->status_payment == 'DOWN PAYMENT')
+                                    <span class="badge badge-md bg-success fw-bold text-uppercase">down payment</span>
+                                @elseif ($payment->status_payment == 'DOWN PAYMENT/PAID')
+                                    <span class="badge badge-md bg-success fw-bold text-uppercase">down payment</span>
+                                @elseif ($payment->status_payment == 'PELUNASAN/PAID')
+                                    <span class="badge badge-md bg-success fw-bold text-uppercase">pelunasan</span>
+                                @else
+                                    <span class="badge badge-md bg-success fw-bold text-uppercase">full payment</span>
+                                @endif
+                            </p>
                             <p class="card-text fw-bold mb-2">Kode Pembayaran : 
                                 <span class="fst-italic fw-normal text-uppercase">
                                     {{ $payment->payment_code }}
@@ -178,13 +189,19 @@
                                     </a>
                                 </span>
                             </p>
+                            <p>
+                                @php $encryptPrintID = Crypt::encrypt($payment->id); @endphp
+                                <a href="{{ route("cetak.print", $encryptPrintID ) }}" target="_blank" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> Cetak</a>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    <div class="d-flex justify-content-end m-3">
+        <a href="{{ route('payment.history') }}" class="btn btn-primary">Kembali</a>
+    </div>
 </div>
 
 @endsection
