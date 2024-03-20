@@ -51,7 +51,7 @@
         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i class="fas fa-home mt-1"></i></a></li>
         <li class="breadcrumb-item" aria-current="page">Pembayaran</li>
         <li class="breadcrumb-item" aria-current="page"><a href="{{ route('payment.index') }}">Data Bayar</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('payment.bayar') }}">Bayar</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="#">Bayar</a></li>
     </ol>
 </nav>
 
