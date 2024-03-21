@@ -5,6 +5,12 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
 {{-- sweet alert2 css --}}
 <link rel="stylesheet" href="{{ URL::asset('assets/sweet-alert/css/sweetalert2.min.css') }}" />
+{{-- datatables css --}}
+<link rel="stylesheet" href="{{ URL::asset('assets/bootstrap-5/css/dataTables.bootstrap5.min.css') }}">
+{{-- datatables responsive css --}}
+<link rel="stylesheet" href="{{ URL::asset('assets/bootstrap-5/css/responsive.dataTables.min.css') }}">
+{{-- datatables row order css --}}
+<link rel="stylesheet" href="{{ URL::asset('assets/bootstrap-5/css/rowReorder.dataTables.min.css') }}">
 @endpush
 
 @push('script')
@@ -20,10 +26,112 @@
 <script type="text/javascript" src="{{ URL::asset('js/form-validation.js') }}"></script>
 {{-- swal delete validation script --}}
 <script type="text/javascript" src="{{ URL::asset('js/swal-delete.js') }}"></script>
+{{-- jquery datatables --}}
+<script type="text/javascript" src="{{ URL::asset('assets/bootstrap-5/js/jquery.dataTables.min.js') }}"></script>
+{{-- datatables js --}}
+<script type="text/javascript" src="{{ URL::asset('assets/bootstrap-5/js/dataTables.bootstrap5.min.js') }}"></script>
+{{-- datatables responsive js --}}
+<script type="text/javascript" src="{{ URL::asset('assets/bootstrap-5/js/dataTables.responsive.min.js') }}"></script>
+{{-- datatables row order js --}}
+<script type="text/javascript" src="{{ URL::asset('assets/bootstrap-5/js/dataTables.rowReorder.min.js') }}"></script>
 
 <script>
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+<script type="text/javascript">
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        var table = $('#riwayat-order').DataTable({
+            responsive: true,
+            rowReorder: {
+                selector: 'td:nth-child(2)'
+            },
+            processing: true,
+            serverSide: true,
+            columnDefs: [{
+                    targets: '_all',
+                    className: 'dt-center',
+            }],
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
+                {
+                    data: 'pre_order',
+                    name: 'pre_order',
+                    render: function(data, type, full, meta) {
+                        return "<span class=\"text-capitalize\">"+ data +"</span>";
+                    }
+                },
+                {
+                    data: 'jenis_box',
+                    name: 'jenis_box',
+                    render: function(data, type, full, meta) {
+                        return "<span class=\"text-capitalize\">"+ data +"</span>";
+                    }
+                },
+                {
+                    data: 'total_price',
+                    name: 'total_price',
+                    render: function(data, type, full, meta) {
+                        return "<span class=\"text-capitalize\">rp "+ data +"</span>";
+                    }
+                },
+                {
+                    data: 'status_proses',
+                    name: 'status_proses',
+                    render: function(data, type, full, meta) {
+                        return "<span class=\"text-capitalize fw-bold badge bg-primary\">"+ data +"</span>";
+                    }
+                },
+                {
+                    data: 'status_payment',
+                    name: 'status_payment',
+                    render: function(data, type, full, meta) {
+                        if (data == 'PENDING') {
+                            return "<span class=\"text-capitalize fw-bold badge bg-success\">BELUM BAYAR</span>";
+                        } else {
+                            return "<span class=\"text-capitalize fw-bold badge bg-success\">"+ data +"</span>";
+                        }
+                    }
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: true,
+                    searchable: true,
+                    render: function(data){
+                    return "<div class=\"d-inline-flex\">"+ data +"</div>";
+                }
+                },
+            ],
+            language: {
+                "sProcessing":   "Memproses...",
+                "sLoadingRecords": "Memuat...",
+                "sLengthMenu":   "Tampilan _MENU_ Baris",
+                "sZeroRecords":  "Data Kosong",
+                "sInfo":         "Menampilkan _START_-_END_ dari _TOTAL_ Baris",
+                "sInfoEmpty":    "Data Kosong",
+                "sInfoFiltered": "(dari keseluruhan data)",
+                "sInfoPostFix":  "",
+                "sSearch":       "Cari Data:",
+                "sUrl":          "",
+                "oPaginate": {
+                    "sFirst":    "<<",
+                    "sPrevious": "<",
+                    "sNext":     ">",
+                    "sLast":     ">>"
+                },
+                "aria": {
+                    "sortAscending":  ": Tampilan kolom ascending",
+                    "sortDescending": ": Tampilan kolom descending"
+                }
+            }
+        });
+
     });
 </script>
 @endpush
@@ -90,21 +198,21 @@
                 </div>
             </div>
         </div>
-        {{-- <div class="card-body col-md-12">
-            <div class="card-header text-center text-uppercase fw-bold bg-secondary text-white">
-                Riwayat Penyewaan
+        <div class="card-body col-md-12">
+            <div class="card-header text-center text-uppercase fw-bold bg-black text-white">
+                Riwayat Order
             </div>
-            <div class="card-body bg-white text-center p-3" style="width:100%; max-heigth:500px">
-                <table class="table text-center align-middle" id="riwayat-sewa" style="width:100%;">
-                    <thead class="thead thead-light bg-gray-dark text-white table-bordered">
+            <div class="card-body">
+                <table class="table text-center align-middle" id="riwayat-order" style="width:100%;">
+                    <thead class="thead thead-secondary bg-secondary text-white table-bordered">
                         <tr class="text-center">
                             <th scope="col">No</th>
-                            <th scope="col">Alat/Event</th>
-                            <th scope="col">Mulai</th>
-                            <th scope="col">Selesai</th>
-                            <th scope="col">Total Bayar</th>
-                            <th scope="col">Note</th>
-                            <th scope="col">Status</th>
+                            <th scope="col">Jenis PO</th>
+                            <th scope="col">Nama Box</th>
+                            <th scope="col">Harga</th>
+                            <th scope="col">Status PO</th>
+                            <th scope="col">Status Bayar</th>
+                            <th scope="col">View</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -116,7 +224,7 @@
                     </tbody>
                 </table>
             </div>
-        </div> --}}
+        </div>
     </div>
     <div class="d-flex justify-content-end m-3">
         <a href="{{ route('client.index') }}" class="btn btn-primary">Kembali</a>

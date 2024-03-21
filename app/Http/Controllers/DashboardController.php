@@ -39,11 +39,19 @@ class DashboardController extends Controller
             $totalPendapatan = $payment->sum('payment_amount');
 
             //potensi pendapatan
-            $dataPO = Production::where('status_payment', '=', 'PENDING')
-                ->latest()->get();
-            $potensiPendapatan = $dataPO->sum('total_price');
+            $dataPO = Production::latest()->get();
+            $dataPayment = Payment::latest()->get();
+
+            $payment = $dataPayment->sum('payment_amount');
+            $production = $dataPO->sum('total_price');
+
+            $potensiPendapatan = $production - $payment;
+
+
 
             return view('dashboard.index', compact(
+                'payment',
+                'production',
                 'jumlahClient',
                 'itemBahan',
                 'jumlahPO',

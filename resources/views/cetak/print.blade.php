@@ -27,7 +27,7 @@
                     {{-- company title receipt --}}
                     <div class="invoice-title">
                         <div class="mb-2">
-                            <img src="{{ URL::asset('/assets/img/google.png') }}" class="navbar-brand-img" data-holder-rendered="true" height="auto" width="200px" />
+                            <img src="{{ URL::asset('/assets/img/logo.png') }}" class="navbar-brand-img" data-holder-rendered="true" height="auto" width="200px" />
                         </div>
                         <div class="text-muted">
                             <p class="mb-0">Cangkring RT 03 Mulyodadi Bambanglipuro</p>

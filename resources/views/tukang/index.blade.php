@@ -98,7 +98,7 @@
                             <td class="align-middle">
                                 @php $encryptID = Crypt::encrypt($tukang->id); @endphp
                                 @if($tukang->is_admin == '1')
-                                    <button type="button" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Info" data-bs-toggle="modal" data-bs-target="#detail{{ $tukang->id }}">
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Lihat Detail" data-bs-toggle="modal" data-bs-target="#detail{{ $tukang->id }}">
                                         <i class="fa fa-eye"></i>
                                     </button>
                                 @elseif(Auth::user()->is_admin == '1')
@@ -109,7 +109,7 @@
                                         <button type="submit" class="btn btn-sm btn-danger btn-flat show_confirm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash"></i></button>
                                     </form>
                                     <a href="{{ route('tukang.edit',$encryptID) }}" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
-                                    <button type="button" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Info" data-bs-toggle="modal" data-bs-target="#detail{{ $tukang->id }}">
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Lihat Detail" data-bs-toggle="modal" data-bs-target="#detail{{ $tukang->id }}">
                                         <i class="fa fa-eye"></i>
                                         </button>
                                 @elseif(Auth::user()->is_admin == '2')
@@ -120,11 +120,11 @@
                                         <button type="submit" class="btn btn-sm btn-danger btn-flat show_confirm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash"></i></button>
                                     </form>
                                     <a href="{{ route('tukang.edit',$encryptID) }}" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
-                                    <button type="button" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Info" data-bs-toggle="modal" data-bs-target="#detail{{ $tukang->id }}">
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Lihat Detail" data-bs-toggle="modal" data-bs-target="#detail{{ $tukang->id }}">
                                         <i class="fa fa-eye"></i>
                                         </button>
                                 @else
-                                    <button type="button" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Info" data-bs-toggle="modal" data-bs-target="#detail{{ $tukang->id }}">
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Lihat Detail" data-bs-toggle="modal" data-bs-target="#detail{{ $tukang->id }}">
                                         <i class="fa fa-eye"></i></button>
                                 @endif
                             </td>

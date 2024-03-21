@@ -105,10 +105,22 @@
                     </div>
                     <div class="form-group card-text col-md-6 mb-3">
                         <label for="price" class="form-label">Harga PO</label>
-                        <div class="input-group">
-                            <div class="input-group-text">Rp</div>
-                            <input type="text" class="form-control count-chars @error('total_price') is-invalid @enderror" name="total_price" id="currency" value="{{ number_format($production->total_price, 0, ',', '.') }}" maxlength="15" data-max-chars="15">
-                        </div>
+                            @if ($production->status_payment == 'DOWN PAYMENT')
+                                <div class="input-group">
+                                    <div class="input-group-text">Rp</div>
+                                    <input type="text" class="form-control count-chars @error('total_price') is-invalid @enderror" name="total_price" id="currency" value="{{ number_format($production->total_price, 0, ',', '.') }}" maxlength="15" data-max-chars="15" readonly>
+                                </div>
+                            @elseif ($production->status_payment == 'PAID')
+                                <div class="input-group">
+                                    <div class="input-group-text">Rp</div>
+                                    <input type="text" class="form-control count-chars @error('total_price') is-invalid @enderror" name="total_price" id="currency" value="{{ number_format($production->total_price, 0, ',', '.') }}" maxlength="15" data-max-chars="15" readonly>
+                                </div>
+                            @else
+                                <div class="input-group">
+                                    <div class="input-group-text">Rp</div>
+                                    <input type="text" class="form-control count-chars @error('total_price') is-invalid @enderror" name="total_price" id="currency" value="{{ number_format($production->total_price, 0, ',', '.') }}" maxlength="15" data-max-chars="15">
+                                </div>
+                            @endif
                         <div class="fw-light text-muted justify-content-end d-flex"></div>
                         @error('total_price')
                         <span class="invalid-feedback">

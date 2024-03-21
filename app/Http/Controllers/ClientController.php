@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Production;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -44,8 +45,8 @@ class ClientController extends Controller
                             <input type="hidden" name="_token" value=' . csrf_token() . '>
                             <button class="btn btn-danger btn-sm btn-flat" type="submit" title="Hapus" data-toggle="tooltip" data-placement="top" onclick="deleteConfirm(event)"><i class="fas fa-trash"></i></button>
                             </form>';
-                        $btn = $btn . '<a href=' . route("client.edit", $encryptID) . ' class="edit btn btn-warning btn-sm m-1" title="Edit Pembayaran" data-toggle="tooltip" data-placement="top"><i class="fas fa-edit"></i></a>';
-                        $btn = $btn . '<a href=' . route("client.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="Lihat Pembayaran" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
+                        $btn = $btn . '<a href=' . route("client.edit", $encryptID) . ' class="edit btn btn-warning btn-sm m-1" title="Edit Data Client" data-toggle="tooltip" data-placement="top"><i class="fas fa-edit"></i></a>';
+                        $btn = $btn . '<a href=' . route("client.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="Lihat Detail" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
 
                         return $btn;
                     })
@@ -102,6 +103,36 @@ class ClientController extends Controller
     {
         $decryptID = Crypt::decrypt($id);
         $client = User::find($decryptID);
+
+        if ($request->ajax()) {
+            $data = Production::where('user_id', '=', $decryptID)
+                ->latest()->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->editColumn('pre_order', function (Production $production) {
+                    return $production->pre_order;
+                })
+                ->editColumn('jenis_box', function (Production $production) {
+                    return $production->jenis_box;
+                })
+                ->editColumn('total_price', function (Production $production) {
+                    return number_format($production->total_price, 0, ',', '.');
+                })
+                ->editColumn('status_proses', function (Production $production) {
+                    return $production->status_proses;
+                })
+                ->editColumn('status_payment', function (Production $production) {
+                    return $production->status_payment;
+                })
+                ->addColumn('action', function (Production $production) {
+                    $encryptID = Crypt::encrypt($production->id);
+                    $btn = '<a href=' . route("production.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="Lihat Order" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
+
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
 
         return view('client.show', compact('client'));
     }

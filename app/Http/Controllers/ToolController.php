@@ -44,10 +44,10 @@ class ToolController extends Controller
                         $btn = '<form class="d-inline m-1" action=' . route("bahan.destroy", $tool->id) . ' method="POST">
                         <input type="hidden" name="_method" value="DELETE">
                         <input type="hidden" name="_token" value=' . csrf_token() . '>
-                        <button class="btn btn-danger btn-sm btn-flat" type="submit" title="Hapus Data Alat" data-toggle="tooltip" data-placement="top" onclick="deleteConfirm(event)"><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-danger btn-sm btn-flat" type="submit" title="Hapus Data Bahan" data-toggle="tooltip" data-placement="top" onclick="deleteConfirm(event)"><i class="fas fa-trash"></i></button>
                         </form>';
-                        $btn = $btn . '<a href=' . route("bahan.edit", $encryptID) . ' class="edit btn btn-warning btn-sm m-1" title="Edit Data Alat" data-toggle="tooltip" data-placement="top"><i class="fas fa-edit"></i></a>';
-                        $btn = $btn . '<a href=' . route("bahan.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="View Data Alat" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
+                        $btn = $btn . '<a href=' . route("bahan.edit", $encryptID) . ' class="edit btn btn-warning btn-sm m-1" title="Edit Data Bahan" data-toggle="tooltip" data-placement="top"><i class="fas fa-edit"></i></a>';
+                        $btn = $btn . '<a href=' . route("bahan.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="View Data Bahan" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
 
                         return $btn;
                     })

@@ -77,7 +77,7 @@ class PaymentController extends Controller
                     })
                     ->addColumn('action', function (Payment $payment) {
                         $encryptID = Crypt::encrypt($payment->id);
-                        $btn =  '<a href=' . route("payment.pelunasan", $encryptID) . ' class="btn btn-primary btn-sm m-1" title="Bayar" data-toggle="tooltip" data-placement="top"><i class="fa fa-plus-square"></i> Bayar</a>';
+                        $btn =  '<a href=' . route("payment.pelunasan", $encryptID) . ' class="btn btn-primary btn-sm m-1" title="Bayar Lunas" data-toggle="tooltip" data-placement="top"><i class="fa fa-plus-square"></i> Bayar Lunas</a>';
                         return $btn;
                     })
                     ->rawColumns(['action'])
@@ -280,7 +280,7 @@ class PaymentController extends Controller
                     })
                     ->addColumn('action', function (Payment $payment) {
                         $encryptID = Crypt::encrypt($payment->id);
-                        $btn =  '<a href=' . route("payment.show", $encryptID) . ' class="btn btn-primary btn-sm m-1" title="Bayar" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye"></i></a>';
+                        $btn =  '<a href=' . route("payment.show", $encryptID) . ' class="btn btn-primary btn-sm m-1" title="Lihat Detail" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye"></i></a>';
                         return $btn;
                     })
                     ->rawColumns(['action'])

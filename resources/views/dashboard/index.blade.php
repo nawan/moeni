@@ -168,7 +168,7 @@
                 </div>
             </div>
             <div class="card-footer bg-light d-flex align-items-center justify-content-between">
-                <a class="small stretched-link" href="{{ route('production.proses') }}" target="_blank"><span class="badge bg-secondary text-lg text-white">Lihat Data Belum Terbayar</span></a>
+                <a class="small stretched-link" href="{{ route('payment.index') }}" target="_blank"><span class="badge bg-secondary text-lg text-white">Lihat Data Belum Terbayar</span></a>
                 <div class="small"><i class="fas fa-angle-right"></i></div>
             </div>
         </div>

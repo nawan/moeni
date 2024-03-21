@@ -54,7 +54,7 @@ class ProductionController extends Controller
                         <input type="hidden" name="_token" value=' . csrf_token() . '>
                         <button class="btn btn-danger btn-sm btn-flat" type="submit" title="Hapus Data PO" data-toggle="tooltip" data-placement="top" onclick="deleteConfirm(event)"><i class="fas fa-trash"></i></button>
                         </form>';
-                        $btn = $btn . '<a href=' . route("production.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="Lihat Event" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
+                        $btn = $btn . '<a href=' . route("production.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="Lihat Order" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
 
                         return $btn;
                     })
@@ -96,6 +96,7 @@ class ProductionController extends Controller
         ]);
 
         $data['total_price'] = 0;
+        $data['status_payment'] = 'PENDING';
 
         $production_id = Production::create($data)->id;
         $encryptID = Crypt::encrypt($production_id);
