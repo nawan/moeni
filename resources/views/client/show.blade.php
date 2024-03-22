@@ -93,6 +93,8 @@
                     render: function(data, type, full, meta) {
                         if (data == 'PENDING') {
                             return "<span class=\"text-capitalize fw-bold badge bg-success\">BELUM BAYAR</span>";
+                        } else if (data == 'PAID'){
+                            return "<span class=\"text-capitalize fw-bold badge bg-success\">LUNAS</span>";
                         } else {
                             return "<span class=\"text-capitalize fw-bold badge bg-success\">"+ data +"</span>";
                         }
