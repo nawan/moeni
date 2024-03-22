@@ -21,7 +21,7 @@
             <div class="card-body">
                 <div class="card-title text-center">
                     <div class="card-img-top mt-2 mb-2">
-                        <img src="{{ URL::asset('/assets/img/logo-blue.png') }}" class="navbar-brand-img" data-holder-rendered="true" height="auto" width="200px" />
+                        <img src="{{ URL::asset('/assets/img/logo.png') }}" class="navbar-brand-img" data-holder-rendered="true" height="auto" width="200px" />
                     </div>
                     <div class="text-muted fw-bold h4">
                         MoeniBox
