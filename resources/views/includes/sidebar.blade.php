@@ -101,6 +101,9 @@
                         <a class="nav-link collapsed" href="{{ route('production.proses') }}">
                             Status PO
                         </a>
+                        <a class="nav-link collapsed" href="{{ route('production.history') }}">
+                            Riwayat PO
+                        </a>
                     </nav>
                 </div>
                 {{-- menu data payment --}}

@@ -26,7 +26,8 @@ class ProductionController extends Controller
     {
         if (auth()->user()->is_admin != '4') {
             if ($request->ajax()) {
-                $data = Production::latest()->get();
+                $data = Production::where('status_proses', '!=', 'DONE')
+                    ->latest()->get();
                 return DataTables::of($data)
                     ->addIndexColumn()
                     ->editColumn('pre_order', function (Production $production) {
@@ -62,6 +63,52 @@ class ProductionController extends Controller
                     ->make(true);
             }
             return view('production.index');
+        } else {
+            return redirect()->route('error.404');
+        }
+    }
+
+    public function history(Request $request)
+    {
+        if (auth()->user()->is_admin != '4') {
+            if ($request->ajax()) {
+                $data = Production::where('status_proses', '=', 'DONE')
+                    ->latest()->get();
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->editColumn('pre_order', function (Production $production) {
+                        return $production->pre_order;
+                    })
+                    ->editColumn('user_id', function (Production $production) {
+                        return $production->user->name;
+                    })
+                    ->editColumn('jenis_box', function (Production $production) {
+                        return $production->jenis_box;
+                    })
+                    ->editColumn('status_proses', function (Production $production) {
+                        return $production->status_proses;
+                    })
+                    ->editColumn('price', function (Production $production) {
+                        return number_format($production->total_price, 0, ',', '.');
+                    })
+                    ->editColumn('status_payment', function (Production $production) {
+                        return $production->status_payment;
+                    })
+                    ->addColumn('action', function (Production $production) {
+                        $encryptID = Crypt::encrypt($production->id);
+                        $btn = '<form class="d-inline m-1" action=' . route("production.destroy", $production->id) . ' method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value=' . csrf_token() . '>
+                        <button class="btn btn-danger btn-sm btn-flat" type="submit" title="Hapus Data PO" data-toggle="tooltip" data-placement="top" onclick="deleteConfirm(event)"><i class="fas fa-trash"></i></button>
+                        </form>';
+                        $btn = $btn . '<a href=' . route("production.show", $encryptID) . ' class="btn btn-info btn-sm m-1" title="Lihat Order" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye"></i></a>';
+
+                        return $btn;
+                    })
+                    ->rawColumns(['action', 'modal'])
+                    ->make(true);
+            }
+            return view('production.history');
         } else {
             return redirect()->route('error.404');
         }

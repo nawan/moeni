@@ -68,7 +68,9 @@ Route::post('ubah-proses/{id}', [ProductionController::class, 'ubahProses'])->mi
 Route::post('pindah-proses/{id}', [ProductionController::class, 'ubahProsesTukang'])->middleware(['auth'])->name('production.pindah-proses');
 Route::get('production-tool/{id}', [ProductionController::class, 'productionTool'])->middleware(['auth'])->name('production.tool');
 Route::get('production-user/{id}', [ProductionController::class, 'productionUser'])->middleware(['auth'])->name('production.user');
-//Route::post('tambah-bahan/{id}', [ProductionController::class, 'tambahBahan'])->middleware(['auth'])->name('tambah.bahan');
+Route::get('/production-history', [ProductionController::class, 'history'])->middleware(['auth'])->name('production.history');
+
+
 Route::match(['get', 'post'], 'tambah-tukang/{production_id}/{tukang_id}', [ProductionController::class, 'tambahTukang'])->middleware(['auth'])->name('tambah.tukang');
 Route::match(['get', 'post'], 'tambah-bahan/{production_id}/{bahan_id}', [ProductionController::class, 'tambahBahan'])->middleware(['auth'])->name('tambah.bahan');
 Route::get('production-user/{id}', [ProductionController::class, 'productionUser'])->middleware(['auth'])->name('production.user');
