@@ -94,4 +94,5 @@ Route::delete('production/{id}', [ProductionController::class, 'destroy'])->name
 Route::delete('payment/{id}', [PaymentController::class, 'destroy'])->name('payment.destroy');
 
 
+
 require __DIR__ . '/auth.php';
