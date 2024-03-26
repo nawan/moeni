@@ -39,7 +39,7 @@ class BahanController extends Controller
             $tampil = [];
 
             foreach ($dataBahan as $data) {
-                $data->foto_bahan = env('APP_URL') . '/' . 'storage/' . $data->foto_bahan;
+                $data->foto_bahan = env('APP_URL') . '/' . 'public/storage/' . $data->foto_bahan;
                 array_push($tampil, $data);
             }
             return response()->json($tampil);
